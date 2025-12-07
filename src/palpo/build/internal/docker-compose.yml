@@ -42,10 +42,6 @@ services:
       PALPO_DB_POOL_SIZE: ${PALPO_DB_POOL_SIZE:-10}
       PALPO_WELL_KNOWN_SERVER: ${PALPO_WELL_KNOWN_SERVER}
       PALPO_WELL_KNOWN_CLIENT: ${PALPO_WELL_KNOWN_CLIENT}
-      VIRTUAL_PORT: ${VIRTUAL_PORT:-8008}
-      VIRTUAL_HOST: ${VIRTUAL_HOST}
-      LETSENCRYPT_HOST: ${LETSENCRYPT_HOST}
-      LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
     configs:
       - source: palpo-conf
         target: ${PALPO_CONFIG:-/var/palpo/palpo.toml}
@@ -58,7 +54,6 @@ services:
         max-file: 3
     networks:
       - palpo-network
-      - step-ca-network
 configs:
   palpo-conf:
     content: |
@@ -72,5 +67,3 @@ volumes:
 networks:
   palpo-network:
     name: palpo-network
-  step-ca-network:
-    external: true

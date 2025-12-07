@@ -3,4 +3,4 @@ environments_path = "./environments"
 extensions_dirs = []
 
 [build.environments]
-available = ["devcontainer", "forwarding", "letsencrypt", "step-ca"]
+available = ["devcontainer", "forwarding", "internal", "letsencrypt", "step-ca"]
