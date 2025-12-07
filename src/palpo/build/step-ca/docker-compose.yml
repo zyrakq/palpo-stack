@@ -1,0 +1,107 @@
+services:
+  palpo-db:
+    image: docker.io/postgres:alpine
+    container_name: palpo-db
+    restart: unless-stopped
+    environment:
+      TZ: ${TZ:-Europe/Moscow}
+      POSTGRES_DB: ${POSTGRES_DB:-palpo}
+      POSTGRES_USER: ${POSTGRES_USER:-palpo}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-palpo}
+      POSTGRES_INITDB_ARGS: ${POSTGRES_INITDB_ARGS}
+    logging:
+      driver: "json-file"
+      options:
+        max-size: 10m
+        max-file: 3
+    healthcheck:
+      test: ["CMD-SHELL", "/bin/sh", "-c", "exec pg_isready -h 127.0.0.1"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - palpo-db:/var/lib/postgresql/data
+    networks:
+      - palpo-network
+  palpo:
+    container_name: palpo
+    image: ${PALPO_IMAGE:-chrislearn/palpo:latest}
+    restart: unless-stopped
+    depends_on:
+      - palpo-db
+    environment:
+      PALPO_CONFIG: ${PALPO_CONFIG:-/var/palpo/palpo.toml}
+      PALPO_ADDRESS: ${PALPO_ADDRESS:-0.0.0.0:8008}
+      PALPO_SERVER_NAME: ${PALPO_SERVER_NAME}
+      PALPO_TRUSTED_SERVERS: ${PALPO_TRUSTED_SERVERS}
+      PALPO_ALLOW_REGISTRATION: ${PALPO_ALLOW_REGISTRATION:-false}
+      PALPO_FEDERATION_ENABLE: ${PALPO_FEDERATION_ENABLE:-true}
+      PALPO_PRESENCE_ALLOW_LOCAL: ${PALPO_PRESENCE_ALLOW_LOCAL:-true}
+      PALPO_MAX_UPLOAD_SIZE: ${PALPO_MAX_UPLOAD_SIZE:-20000000}
+      PALPO_DB_URL: postgres://${POSTGRES_USER:-palpo}:${POSTGRES_PASSWORD:-changeme}@palpo-db:5432/${POSTGRES_DB:-palpo}
+      PALPO_DB_POOL_SIZE: ${PALPO_DB_POOL_SIZE:-10}
+      PALPO_WELL_KNOWN_SERVER: ${PALPO_WELL_KNOWN_SERVER}
+      PALPO_WELL_KNOWN_CLIENT: ${PALPO_WELL_KNOWN_CLIENT}
+      VIRTUAL_PORT: ${VIRTUAL_PORT:-8008}
+      VIRTUAL_HOST: ${VIRTUAL_HOST}
+      LETSENCRYPT_HOST: ${LETSENCRYPT_HOST}
+      LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
+    configs:
+      - source: palpo-conf
+        target: ${PALPO_CONFIG:-/var/palpo/palpo.toml}
+    volumes:
+      - palpo-media:/var/palpo/media
+    logging:
+      driver: "json-file"
+      options:
+        max-size: 10m
+        max-file: 3
+    networks:
+      - palpo-network
+      - step-ca-network
+  palpo-ui:
+    container_name: palpo-ui
+    image: ferronserver/ferron:2
+    restart: unless-stopped
+    environment:
+      VIRTUAL_PORT: ${WELL_KNOWN_VIRTUAL_PORT:-80}
+      VIRTUAL_HOST: ${WELL_KNOWN_VIRTUAL_HOST}
+      LETSENCRYPT_HOST: ${WELL_KNOWN_LETSENCRYPT_HOST}
+      LETSENCRYPT_EMAIL: ${WELL_KNOWN_LETSENCRYPT_EMAIL}
+    logging:
+      driver: "json-file"
+      options:
+        max-size: 10m
+        max-file: 3
+    depends_on:
+      - palpo
+    configs:
+      - source: palpo-ui-conf
+        target: /etc/ferron.kdl
+    networks:
+      - step-ca-network
+configs:
+  palpo-conf:
+    content: |
+      server_name = "${PALPO_SERVER_NAME}"
+      [db]
+  palpo-ui-conf:
+    content: |
+      *:80 {
+          location "/.well-known" {
+              proxy "http://palpo:${VIRTUAL_PORT:-8008}"
+          }
+          location "/_matrix" {
+              proxy "http://palpo:${VIRTUAL_PORT:-8008}"
+          }
+      }
+volumes:
+  palpo-db:
+    name: palpo-db
+  palpo-media:
+    name: palpo-media
+networks:
+  palpo-network:
+    name: palpo-network
+  step-ca-network:
+    external: true

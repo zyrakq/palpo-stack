@@ -1,0 +1,11 @@
+services:
+  palpo-db:
+    networks:
+      - palpo-workspace-network
+  palpo:
+    networks:
+      - palpo-workspace-network
+
+networks:
+  palpo-workspace-network:
+    external: true

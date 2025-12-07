@@ -1,0 +1,7 @@
+services:
+  palpo-db:
+    ports:
+      - ${DB_PORT:-5432}:${DB_PORT:-5432}
+  palpo:
+    ports:
+      - ${PALPO_PORT:-8008}:${PALPO_PORT:-8008}
