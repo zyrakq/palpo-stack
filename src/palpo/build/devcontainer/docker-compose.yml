@@ -41,8 +41,6 @@ services:
       PALPO_MAX_UPLOAD_SIZE: ${PALPO_MAX_UPLOAD_SIZE:-20000000}
       PALPO_DB_URL: postgres://${POSTGRES_USER:-palpo}:${POSTGRES_PASSWORD:-changeme}@palpo-db:5432/${POSTGRES_DB:-palpo}
       PALPO_DB_POOL_SIZE: ${PALPO_DB_POOL_SIZE:-10}
-      PALPO_WELL_KNOWN_SERVER: ${PALPO_WELL_KNOWN_SERVER}
-      PALPO_WELL_KNOWN_CLIENT: ${PALPO_WELL_KNOWN_CLIENT}
     configs:
       - source: palpo-conf
         target: ${PALPO_CONFIG:-/var/palpo/palpo.toml}
@@ -60,7 +58,10 @@ configs:
   palpo-conf:
     content: |
       server_name = "${PALPO_SERVER_NAME}"
-      [db]
+      # enable_admin_room = true
+      # [admin]
+      # room_notices = true
+      # console_automatic = true
 volumes:
   palpo-db:
     name: palpo-db
