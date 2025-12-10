@@ -1,6 +1,32 @@
 [paths]
 environments_path = "./environments"
-extensions_dirs = []
+extensions_dirs = ["extensions"]
+
+[build]
+extensions = ["coturn", "step-ca-trust"]
+
+[build.combos]
+coturn-trust = ["coturn", "step-ca-trust"]
 
 [build.environments]
 available = ["devcontainer", "forwarding", "internal", "letsencrypt", "step-ca"]
+
+[build.environments.devcontainer]
+extensions = ["coturn"]
+combos = []
+
+[build.environments.forwarding]
+extensions = ["coturn"]
+combos = []
+
+[build.environments.internal]
+extensions = ["coturn"]
+combos = []
+
+[build.environments.letsencrypt]
+extensions = ["coturn"]
+combos = []
+
+[build.environments.step-ca]
+extensions = ["step-ca-trust"]
+combos = ["coturn-trust"]

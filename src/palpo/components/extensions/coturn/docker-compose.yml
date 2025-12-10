@@ -1,0 +1,5 @@
+services:
+  palpo:
+    environment:
+      PALPO_TURN_URIS: ${PALPO_TURN_URIS}
+      PALPO_TURN_SHARED_SECRET: ${PALPO_TURN_SHARED_SECRET}
