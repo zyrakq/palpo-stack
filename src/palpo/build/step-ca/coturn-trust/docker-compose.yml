@@ -4,7 +4,7 @@ services:
     container_name: palpo-db
     restart: unless-stopped
     environment:
-      TZ: ${TZ:-Europe/Moscow}
+      TZ: ${TZ:-Etc/UTC}
       POSTGRES_DB: ${POSTGRES_DB:-palpo}
       POSTGRES_USER: ${POSTGRES_USER:-palpo}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-palpo}

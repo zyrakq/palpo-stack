@@ -23,6 +23,11 @@ Local domain stack with trusted self-signed certificates for virtual network dep
 Modular Docker Compose configuration system for Palpo Matrix homeserver with support for multiple environments and TURN integration capabilities. Provides modern, Rust-based Matrix homeserver deployment with PostgreSQL backend and customizable configurations for development and production.
 [Learn more about Palpo configuration](src/palpo/README.md).
 
+### 🏠 [Homepage Gateway](src/homepage/)
+
+Gateway service for providing external access to internal services on the primary domain. Essential for internal Palpo deployments where Matrix usernames should be tied to the primary domain (e.g., `@user:example.com`) instead of a subdomain.
+[Learn more about Homepage Gateway configuration](src/homepage/README.md).
+
 ## 🚀 Quick Start
 
 Each component has its own README with detailed setup instructions. Choose the certificate management solution that fits your deployment scenario.
@@ -63,6 +68,8 @@ docker compose up -d
 
 ## 🏗️ Architecture
 
+### Standard Deployment (with subdomain)
+
 ```sh
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
 │  Matrix Client  │────│  Palpo Matrix   │────│   PostgreSQL    │
@@ -76,6 +83,24 @@ docker compose up -d
                        │  Step CA)       │
                        └─────────────────┘
 ```
+
+### Internal Deployment (with Homepage Gateway on primary domain)
+
+```sh
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│  Matrix Client  │────│    Homepage     │────│  Palpo Matrix   │
+│ (Element/Cinny) │    │    Gateway      │    │   Homeserver    │
+└─────────────────┘    │ (example.com)   │    │   (internal)    │
+         │             └─────────────────┘    └─────────────────┘
+         │                       │                       │
+         │             ┌─────────────────┐    ┌─────────────────┐
+         │             │  SSL Manager    │    │   PostgreSQL    │
+         └─────────────│ (Let's Encrypt/ │    │   (Database)    │
+                       │  Step CA)       │    └─────────────────┘
+                       └─────────────────┘
+```
+
+**Note:** Internal deployment with Homepage Gateway allows Matrix usernames on the primary domain (e.g., `@user:example.com`) instead of a subdomain (e.g., `@user:matrix.example.com`).
 
 ## 📋 Requirements
 
@@ -125,15 +150,23 @@ docker compose up -d
 
 ### Internal Network Environment
 
+Internal deployment is designed for scenarios where Palpo runs in an isolated network and external access is provided through Homepage Gateway on the primary domain. This allows Matrix usernames to be tied to the primary domain (e.g., `@user:example.com`) instead of a subdomain.
+
 ```bash
-# Palpo in internal network
+# 1. Deploy Palpo in internal network
 cd src/palpo/build/internal/base/
 docker compose up -d
 
-# Palpo in internal network with TURN
+# 2. Deploy Homepage Gateway on primary domain
+cd src/homepage/build/letsencrypt/  # or step-ca
+docker compose up -d
+
+# With TURN support
 cd src/palpo/build/internal/coturn/
 docker compose up -d
 ```
+
+**Note:** For external access in internal mode, Homepage Gateway must be deployed on your primary domain to route Matrix traffic to the internal Palpo instance.
 
 ### DevContainer Environment
 
