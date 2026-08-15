@@ -7,11 +7,11 @@ extensions_dirs = [
 
 [build]
 skip_base_generation = true
-extensions = ["postgresql", "turn", "step-ca-trust"]
+extensions = ["postgresql", "pgrust", "turn", "step-ca-trust"]
 
 [build.combos]
-entire = ["postgresql", "turn"]
-entire-trust = ["postgresql", "turn", "step-ca-trust"]
+entire = ["pgrust", "turn"]
+entire-trust = ["pgrust", "turn", "step-ca-trust"]
 
 [build.environments]
 available = ["forwarding", "internal", "letsencrypt", "step-ca"]
@@ -30,4 +30,4 @@ combos = ["entire"]
 
 [build.environments.step-ca]
 extensions = []
-combos = ["entire-trust"]
+combos = ["entire"]

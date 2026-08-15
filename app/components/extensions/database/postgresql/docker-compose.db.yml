@@ -23,7 +23,7 @@ services:
       timeout: 5s
       retries: 5
     volumes:
-      - palpo-db:/var/lib/postgresql/data
+      - palpo-db:/var/lib/postgresql
     networks:
       - palpo-network
 

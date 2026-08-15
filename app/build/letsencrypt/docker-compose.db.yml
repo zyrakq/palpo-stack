@@ -7,7 +7,7 @@ x-logging: &default-logging
 
 services:
   palpo-db:
-    image: docker.io/postgres:alpine
+    image: malisper/pgrust:v0.2
     container_name: palpo-db
     restart: unless-stopped
     environment:
@@ -23,7 +23,7 @@ services:
       timeout: 5s
       retries: 5
     volumes:
-      - palpo-db:/var/lib/postgresql/data
+      - palpo-db:/var/lib/postgresql
     networks:
       - palpo-network
 
