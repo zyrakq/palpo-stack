@@ -8,11 +8,16 @@ x-logging: &default-logging
 services:
   palpo:
     container_name: palpo
-    image: ${IMAGE:-chrislearn/palpo:latest}
+    image: palpo
+    build:
+      context: .
+      dockerfile_inline: |
+        FROM ${IMAGE:-chrislearn/palpo:latest}
+        RUN touch /var/palpo/palpo.toml
     restart: unless-stopped
     logging: *default-logging
     environment:
-      PALPO_CONFIG: ${PALPO_CONFIG:-/var/palpo/palpo.toml}
+      PALPO_CONFIG: ${PALPO_CONFIG:-}
       PALPO_ADDRESS: ${PALPO_ADDRESS:-0.0.0.0:8008}
       PALPO_SERVER_NAME: ${PALPO_SERVER_NAME}
       PALPO_TRUSTED_SERVERS: ${PALPO_TRUSTED_SERVERS}
@@ -33,22 +38,10 @@ services:
       # Security (Message)
       PALPO_RC_MESSAGE__PER_SECOND: ${PALPO_RC_MESSAGE__PER_SECOND:-9999.0}
       PALPO_RC_MESSAGE__BURST: ${PALPO_RC_MESSAGE__BURST:-9999}
-    configs:
-      - source: palpo-conf
-        target: ${PALPO_CONFIG:-/var/palpo/palpo.toml}
     volumes:
       - palpo-media:/var/palpo/media
     networks:
       - palpo-network
-
-configs:
-  palpo-conf:
-    content: |
-      server_name = "${PALPO_SERVER_NAME}"
-      # enable_admin_room = true
-      # [admin]
-      # room_notices = true
-      # console_automatic = true
 
 volumes:
   palpo-media:
