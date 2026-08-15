@@ -1,32 +1,33 @@
 [paths]
 environments_path = "./environments"
-extensions_dirs = ["extensions"]
+extensions_dirs = [
+    "extensions/database",
+    "extensions"
+]
 
 [build]
-extensions = ["coturn", "step-ca-trust"]
+skip_base_generation = true
+extensions = ["postgresql", "turn", "step-ca-trust"]
 
 [build.combos]
-coturn-trust = ["coturn", "step-ca-trust"]
+entire = ["postgresql", "turn"]
+entire-trust = ["postgresql", "turn", "step-ca-trust"]
 
 [build.environments]
-available = ["devcontainer", "forwarding", "internal", "letsencrypt", "step-ca"]
-
-[build.environments.devcontainer]
-extensions = ["coturn"]
-combos = []
+available = ["forwarding", "internal", "letsencrypt", "step-ca"]
 
 [build.environments.forwarding]
-extensions = ["coturn"]
-combos = []
+extensions = []
+combos = ["entire"]
 
 [build.environments.internal]
-extensions = ["coturn"]
-combos = []
+extensions = []
+combos = ["entire"]
 
 [build.environments.letsencrypt]
-extensions = ["coturn"]
-combos = []
+extensions = []
+combos = ["entire"]
 
 [build.environments.step-ca]
-extensions = ["step-ca-trust"]
-combos = ["coturn-trust"]
+extensions = []
+combos = ["entire-trust"]

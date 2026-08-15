@@ -1,0 +1,42 @@
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: ${LOG_MAX_SIZE:-10m}
+    max-file: ${LOG_MAX_FILE:-3}
+    compress: ${LOG_COMPRESS:-true}
+
+services:
+  palpo-db:
+    image: docker.io/postgres:alpine
+    container_name: palpo-db
+    restart: unless-stopped
+    environment:
+      TZ: ${TZ:-Etc/UTC}
+      POSTGRES_DB: ${POSTGRES_DB:-palpo}
+      POSTGRES_USER: ${POSTGRES_USER:-palpo}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-palpo}
+      POSTGRES_INITDB_ARGS: ${POSTGRES_INITDB_ARGS}
+    logging: *default-logging
+    healthcheck:
+      test: ["CMD-SHELL", "/bin/sh", "-c", "exec pg_isready -h 127.0.0.1"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - palpo-db:/var/lib/postgresql/data
+    networks:
+      - palpo-network
+
+  palpo:
+    container_name: palpo
+    depends_on:
+      - palpo-db
+
+volumes:
+  palpo-db:
+    name: palpo-db
+
+networks:
+  palpo-network:
+    name: palpo-network
+    
