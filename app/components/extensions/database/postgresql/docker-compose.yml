@@ -1,6 +1,5 @@
 services:
   palpo:
-    container_name: palpo
     environment:
       PALPO_DB__URL: ${PALPO_DB__URL}
       PALPO_DB__POOL_SIZE: ${PALPO_DB_POOL__SIZE:-10}

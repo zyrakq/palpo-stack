@@ -28,7 +28,6 @@ services:
       - palpo-network
 
   palpo:
-    container_name: palpo
     depends_on:
       - palpo-db
 
