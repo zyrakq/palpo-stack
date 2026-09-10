@@ -8,11 +8,11 @@ extensions_dirs = [
 
 [build]
 skip_base_generation = true
-extensions = ["fs-storage", "s3-storage", "postgresql", "pgrust", "turn", "step-ca-trust"]
+extensions = ["fs-storage", "s3-storage", "postgresql", "pgrust", "oidc", "turn", "step-ca-trust"]
 
 [build.combos]
-entire = ["s3-storage", "pgrust", "turn"]
-entire-trust = ["s3-storage", "pgrust", "turn", "step-ca-trust"]
+entire = ["s3-storage", "pgrust", "oidc", "turn"]
+entire-trust = ["s3-storage", "pgrust", "oidc", "turn", "step-ca-trust"]
 
 [build.environments]
 available = ["forwarding", "internal", "letsencrypt", "step-ca"]
@@ -31,4 +31,4 @@ combos = ["entire"]
 
 [build.environments.step-ca]
 extensions = []
-combos = ["entire"]
+combos = ["entire-trust"]

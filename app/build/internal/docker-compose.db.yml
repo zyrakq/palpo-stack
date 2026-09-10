@@ -29,7 +29,8 @@ services:
 
   palpo:
     depends_on:
-      - palpo-db
+      palpo-db:
+        condition: service_healthy
 
 volumes:
   palpo-db:

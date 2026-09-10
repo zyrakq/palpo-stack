@@ -2,6 +2,22 @@
 
 A modular Docker Compose configuration system for Palpo Matrix homeserver with support for multiple environments and TURN integration capabilities.
 
+## OIDC Discovery Issue
+
+Palpo ignores `authorization_endpoint` and `token_endpoint` from the OIDC provider’s discovery document. It always tries to use `{issuer}/authorize`.
+
+## Current OIDC Workaround
+
+OIDC login currently requires `delegated_auth` to be enabled (with at least `issuer` and `client_id`).
+
+## Useful Matrix Endpoints
+
+- `https://{domain}/_matrix/client/r0/login`
+- `https://{domain}/_matrix/client/v3/login`
+- `https://{domain}/_matrix/client/versions`
+- `https://{domain}/.well-known/matrix/client`
+- `https://{domain}/.well-known/matrix/server`
+
 ## 🚀 Quick Start
 
 ### 1. Build Configurations
