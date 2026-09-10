@@ -1,0 +1,11 @@
+services:
+  palpo:
+    environment:
+      PALPO_STORAGE__BACKEND: ${PALPO_STORAGE__BACKEND:-fs}
+      PALPO_STORAGE__ROOT: ${PALPO_STORAGE__ROOT:-./space}
+    volumes:
+      - palpo-media:/var/palpo/space
+
+volumes:
+  palpo-media:
+    name: palpo-media

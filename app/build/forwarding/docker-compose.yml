@@ -16,7 +16,7 @@ services:
     restart: unless-stopped
     logging: *default-logging
     environment:
-      PALPO_CONFIG: ${PALPO_CONFIG:-}
+      PALPO_CONFIG: ${PALPO_CONFIG:-/var/palpo/palpo.toml}
       PALPO_ADDRESS: ${PALPO_ADDRESS:-0.0.0.0:8008}
       PALPO_SERVER_NAME: ${PALPO_SERVER_NAME}
       PALPO_TRUSTED_SERVERS: ${PALPO_TRUSTED_SERVERS}
@@ -37,12 +37,20 @@ services:
       # Security (Message)
       PALPO_RC_MESSAGE__PER_SECOND: ${PALPO_RC_MESSAGE__PER_SECOND:-9999.0}
       PALPO_RC_MESSAGE__BURST: ${PALPO_RC_MESSAGE__BURST:-9999}
+      PALPO_STORAGE__BACKEND: ${PALPO_STORAGE__BACKEND:-s3}
+      PALPO_STORAGE__ENDPOINT: ${PALPO_STORAGE__ENDPOINT}
+      PALPO_STORAGE__ACCESS_KEY_ID: ${PALPO_STORAGE__ACCESS_KEY_ID}
+      PALPO_STORAGE__SECRET_ACCESS_KEY: ${PALPO_STORAGE__SECRET_ACCESS_KEY}
+      PALPO_STORAGE__BUCKET: ${PALPO_STORAGE__BUCKET}
+      PALPO_STORAGE__REGION: ${PALPO_STORAGE__REGION}
+      PALPO_STORAGE__PREFIX: ${PALPO_STORAGE__PREFIX}
+      PALPO_STORAGE__PATH_STYLE: ${PALPO_STORAGE__PATH_STYLE:-true}
+      PALPO_STORAGE__REDIRECT: ${PALPO_STORAGE__REDIRECT:-true}
+      PALPO_STORAGE__PRESIGN_EXPIRY: ${PALPO_STORAGE__PRESIGN_EXPIRY:-300}
       PALPO_DB__URL: ${PALPO_DB__URL}
       PALPO_DB__POOL_SIZE: ${PALPO_DB_POOL__SIZE:-10}
       PALPO_TURN__URIS: ${PALPO_TURN__URIS}
       PALPO_TURN__SHARED_SECRET: ${PALPO_TURN__SHARED_SECRET}
-    volumes:
-      - palpo-media:/var/palpo/media
     networks:
       - palpo-network
     ports:
@@ -50,9 +58,6 @@ services:
   palpo-db:
     ports:
       - ${DB_PORT:-5432}:${DB_PORT:-5432}
-volumes:
-  palpo-media:
-    name: palpo-media
 networks:
   palpo-network:
     name: palpo-network
