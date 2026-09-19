@@ -15,13 +15,9 @@ entire = ["s3-storage", "pgrust", "oidc", "turn"]
 entire-trust = ["s3-storage", "pgrust", "oidc", "turn", "step-ca-trust"]
 
 [build.environments]
-available = ["forwarding", "internal", "letsencrypt", "step-ca"]
+available = ["forwarding", "letsencrypt", "step-ca"]
 
 [build.environments.forwarding]
-extensions = []
-combos = ["entire"]
-
-[build.environments.internal]
 extensions = []
 combos = ["entire"]
 
