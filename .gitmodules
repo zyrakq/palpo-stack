@@ -7,3 +7,18 @@
 [submodule "modules/homepage"]
 	path = modules/homepage
 	url = https://github.com/zyrakq/homepage.git
+[submodule "ui/cinny"]
+	path = ui/cinny
+	url = https://github.com/zyrakq/cinny-stack.git
+[submodule "ui/commet"]
+	path = ui/commet
+	url = https://github.com/zyrakq/commet-stack.git
+[submodule "ui/element"]
+	path = ui/element
+	url = https://github.com/zyrakq/element-stack.git
+[submodule "ui/fluffychat"]
+	path = ui/fluffychat
+	url = https://github.com/zyrakq/fluffychat-stack.git
+[submodule "ui/sable"]
+	path = ui/sable
+	url = https://github.com/zyrakq/sable-stack.git
